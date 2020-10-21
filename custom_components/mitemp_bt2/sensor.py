@@ -173,6 +173,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     devs = []
 
     mac = config[CONF_MAC]
+    mode = config[CONF_MODE]
     instance = SingletonBLEScanner()
     hass.bus.listen("homeassistant_stop", instance.shutdown_handler)
 
@@ -184,7 +185,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         if prefix:
             name = "{} {}".format(prefix, name)
 
-        devs.append(MiTemperatureSensor(mac, parameter, name, unit))
+        devs.append(MiTemperatureSensor(mac, mode, parameter, name, unit))
 
     add_entities(devs, True)
 
