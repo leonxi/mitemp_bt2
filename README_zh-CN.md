@@ -35,10 +35,12 @@
 sensor:
   - platform: mitemp_bt2
     mac: 'A4:C1:38:AA:AA:AA'
+    mode: 'LYWSD03MMC'
     name: book room
     period: 60
   - platform: mitemp_bt2
     mac: 'A4:C1:38:FF:FF:FF'
+    mode: 'LYWSD03MMC'
     name: living room
     period: 60
 ```
