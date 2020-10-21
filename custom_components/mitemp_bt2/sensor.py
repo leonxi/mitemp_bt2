@@ -19,6 +19,7 @@ from homeassistant.const import (
     CONF_MONITORED_CONDITIONS,
     CONF_NAME,
     CONF_MAC,
+    CONF_MODE,
     ATTR_ATTRIBUTION,
     ATTR_FRIENDLY_NAME,
     PERCENTAGE,
@@ -28,6 +29,7 @@ from homeassistant.helpers.event import track_point_in_utc_time
 import homeassistant.util.dt as dt_util
 
 from .const import (
+    DEFAULT_MODE,
     DEFAULT_PERIOD,
     DEFAULT_USE_MEDIAN,
     DEFAULT_ACTIVE_SCAN,
@@ -50,6 +52,7 @@ SENSOR_TYPES = {
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_MAC): cv.string,
+    vol.Optional(CONF_MODE, default=DEFAULT_MODE): cv.string,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Optional(CONF_PERIOD, default=DEFAULT_PERIOD): cv.positive_int,
     vol.Optional(CONF_USE_MEDIAN, default=DEFAULT_USE_MEDIAN): cv.boolean,
@@ -126,7 +129,7 @@ class SingletonBLEScanner(object):
                     SingletonBLEScanner._instance = object.__new__(cls)
         return SingletonBLEScanner._instance
 
-    def get_info(self, mac, interface = 0):
+    def get_info(self, mac, mode = DEFAULT_MODE, interface = 0):
         with self._instance_lock:
             self._event_loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self._event_loop)
@@ -139,9 +142,10 @@ class SingletonBLEScanner(object):
 
             future = asyncio.Future()
 
-            val=b'\x01\x00'
-            p.writeCharacteristic(0x0038,val,True) # enable notifications of Temperature, Humidity and Battery voltage
-            p.writeCharacteristic(0x0046,b'\xf4\x01\x00',True)
+            if mode == DEFAULT_MODE:
+                val=b'\x01\x00'
+                p.writeCharacteristic(0x0038,val,True) # enable notifications of Temperature, Humidity and Battery voltage
+                p.writeCharacteristic(0x0046,b'\xf4\x01\x00',True)
             p.withDelegate(MyDelegate(mac, future))
 
             cnt = 0
@@ -185,7 +189,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
     def discover_ble_device(config):
 
-        data = instance.get_info(config[CONF_MAC])
+        data = instance.get_info(config[CONF_MAC], mode=config[CONF_MODE])
 
         if data:
             for dev in devs:

@@ -1,3 +1,5 @@
+English | [简体中文](./README_zh-CN.md)
+
 # Xiaomi Mijia BLE Temperature Hygrometer 2
 
 This is a custom component for home assistant to integrate the Xiaomi Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
@@ -32,16 +34,19 @@ You can install this custom component by adding this repository ([https://github
 sensor:
   - platform: mitemp_bt2
     mac: 'A4:C1:38:AA:AA:AA'
+    mode: 'LYWSD03MMC'
     name: book room
     period: 60
   - platform: mitemp_bt2
     mac: 'A4:C1:38:FF:FF:FF'
+    mode: 'LYWSD03MMC'
     name: living room
     period: 60
 ```
 
 Configuration variables:
 - **mac** (*Required*): The MAC of your device.
+- **mode** (*Optional*): The mode of your device. Default LYWSD03MMC
 - **name** (*Optional*): The name of your device.
 - **period** (*Optional*): The scan period of your device. Default 300 seconds.
 
