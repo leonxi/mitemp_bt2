@@ -42,6 +42,7 @@ _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = 'Mijia BLE Temperature Hygrometer 2'
 
+ATTRIBUTION_1 = "米家蓝牙温湿度计"
 ATTRIBUTION = "米家蓝牙温湿度计 2"
 
 SENSOR_TYPES = {
@@ -225,8 +226,9 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
 class MiTemperatureSensor(Entity):
 
-    def __init__(self, mac, parameter, name, unit):
+    def __init__(self, mac, mode, parameter, name, unit):
         self._mac = mac
+        self._mode = mode
         self.parameter = parameter
         self._unique_id = "{}_{}".format(parameter, mac.replace(":", "").lower())
         self._unit = unit
@@ -257,9 +259,14 @@ class MiTemperatureSensor(Entity):
     @property
     def device_state_attributes(self):
         if self._state is not None:
-            return {
-                ATTR_ATTRIBUTION: ATTRIBUTION,
-            }
+            if self._mode == DEFAULT_MODE:
+                return {
+                    ATTR_ATTRIBUTION: ATTRIBUTION,
+                }
+            else:
+                return {
+                    ATTR_ATTRIBUTION: ATTRIBUTION_1,
+                }
 
     @property
     def unique_id(self) -> Optional[str]:

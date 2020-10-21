@@ -2,6 +2,8 @@
 
 # 小米 米家蓝牙温湿度计2
 
+[![GitHub Release][releases-shield]][releases]
+
 这是一个Home Assistant自定义组件，用于集成小米 米家蓝牙温湿度计2 (LYWSD03MMC)。
 
 ![LYWSD03MMC](/pictures/LYWSD03MMC.jpg)
