@@ -1,6 +1,6 @@
 {
   "domain": "mitemp_bt2",
-  "name": "Mijia Bluetooth Temperature Hygrometer 2",
+  "name": "Mijia BLE Temperature Hygrometer 2",
   "documentation": "https://github.com/leonxi/mitemp_bt2",
   "issue_tracker": "https://github.com/leonxi/mitemp_bt2/issues",
   "dependencies": [],
