@@ -57,3 +57,6 @@ Configuration variables:
 ## Panel Sample
 
   ![LYWSD03MMC_PANEL_SHOW](/pictures/sample_panel_1.png)
+
+[releases-shield]: https://img.shields.io/github/release/leonxi/mitemp_bt2.svg
+[releases]: https://github.com/leonxi/mitemp_bt2/releases
