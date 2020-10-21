@@ -5,11 +5,13 @@ English | [简体中文](./README_zh-CN.md)
 This is a custom component for home assistant to integrate the Xiaomi Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
 
 ![LYWSD03MMC](/pictures/LYWSD03MMC.jpg)
+![LYWSDCGQ/01ZM](/pictures/LYWSDCGQ01ZM.jpg)
 
 ## Supported devices
 
 | Name                   | Model                  | Model no. |
 | ---------------------- | ---------------------- | --------- |
+| Xiaomi Mijia BLE Temperature Hygrometer  |  | LYWSDCGQ/01ZM |
 | Xiaomi Mijia BLE Temperature Hygrometer 2  |  | LYWSD03MMC  |
 
 ## Features
