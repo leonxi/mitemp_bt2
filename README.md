@@ -8,7 +8,7 @@ This is a custom component for home assistant to integrate the Xiaomi Mijia BLE 
 
 | Name                   | Model                  | Model no. |
 | ---------------------- | ---------------------- | --------- |
-| Xiaomi Mijia BLE Temperature Hygrometer 2  | LYWSD03MMC   | |
+| Xiaomi Mijia BLE Temperature Hygrometer 2  |  | LYWSD03MMC  |
 
 ## Features
 

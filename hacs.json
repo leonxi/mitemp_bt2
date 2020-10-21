@@ -1,5 +1,6 @@
 {
   "name": "Mijia BLE Temperature Hygrometer 2",
   "content_in_root": false,
-  "render_readme": true
+  "render_readme": true,
+  "iot_class": "local_polling"
 }
