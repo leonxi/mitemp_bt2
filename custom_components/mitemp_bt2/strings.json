@@ -1,26 +1,15 @@
 {
   "config": {
-    "flow_title": "Discovered Device ({host})",
     "step": {
-      "init": {
-        "title": "The user visible title of the `init` step.",
-        "description": "Markdown that is shown with the step.",
+      "user": {
+        "title": "New Mijia Hygrometer Sensor",
+        "description": "If you need help with the configuration have a look here: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
         "data": {
           "mac": "Device MAC (e.g. \"A4:C1:38:AA:AA:AA\")",
           "mode": "Device mode no.",
           "name": "Device name",
           "period": "Scan period of this device"
         }
-      },
-      "user": {
-        "data": {
-          "mac": "Device MAC (e.g. \"A4:C1:38:AA:AA:AA\")",
-          "mode": "Device mode no.",
-          "name": "Device name",
-          "period": "Scan period of this device"
-        },
-        "description": "If you need help with the configuration have a look here: https:\/\/hacs.xyz\/docs\/configuration\/start\/",
-        "title": "HACS (Home Assistant Community Store)"
       }
     }
   }
