@@ -4,10 +4,21 @@ English | [简体中文](./README_zh-CN.md)
 
 [![GitHub Release][releases-shield]][releases]
 
-This is a custom component for home assistant to integrate the Xiaomi Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
+This is a custom component for home assistant to use bluetooth adapter directly integrate the Xiaomi Mijia BLE Temperature Hygrometer (LYWSDCGQ/01ZM) and Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
 
-![LYWSD03MMC](/pictures/LYWSD03MMC.jpg)
-![LYWSDCGQ/01ZM](/pictures/LYWSDCGQ01ZM.jpg)
+No Bluetooth Gateway required.
+
+| LYWSD03MMC | LYWSDCGQ/01ZM |
+| ---------------------- | ---------------------- |
+| ![LYWSD03MMC](/pictures/LYWSD03MMC.jpg) | ![LYWSDCGQ/01ZM](/pictures/LYWSDCGQ01ZM.jpg) |
+
+## Requirements
+
+* Supported & tested on HassOS 4.13 (HassOS Release-4 build 13 (Stable))
+  * Warning: HassOS 4.14 has BLE bugs need fix, BLE devices can not be connected.
+  * Other versions need to be tested
+* Hardware need bluetooth adapter and be actived, tested on Raspberry PI 3 Model B
+  * Other hardwares need to be tested
 
 ## Supported devices
 
@@ -17,6 +28,13 @@ This is a custom component for home assistant to integrate the Xiaomi Mijia BLE 
 | Xiaomi Mijia BLE Temperature Hygrometer 2  |  | LYWSD03MMC  |
 
 ## Features
+
+### Mijia BLE Temperature Hygrometer (LYWSDCGQ/01ZM)
+
+- Attributes
+  - `temperature`
+  - `humidity`
+  - `battery`
 
 ### Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC)
 

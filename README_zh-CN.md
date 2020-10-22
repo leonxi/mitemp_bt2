@@ -4,10 +4,21 @@
 
 [![GitHub Release][releases-shield]][releases]
 
-这是一个Home Assistant自定义组件，用于集成小米 米家蓝牙温湿度计2 (LYWSD03MMC)。
+这是一个Home Assistant自定义组件，用于 Home Assistant 通过 蓝牙适配器 直接集成 小米 米家蓝牙温湿度计 (LYWSDCGQ/01ZM) 和 米家蓝牙温湿度计2 (LYWSD03MMC)。
 
-![LYWSD03MMC](/pictures/LYWSD03MMC.jpg)
-![LYWSDCGQ/01ZM](/pictures/LYWSDCGQ01ZM.jpg)
+不需要蓝牙网关。
+
+| LYWSD03MMC | LYWSDCGQ/01ZM |
+| ---------------------- | ---------------------- |
+| ![LYWSD03MMC](/pictures/LYWSD03MMC.jpg) | ![LYWSDCGQ/01ZM](/pictures/LYWSDCGQ01ZM.jpg) |
+
+## 必要条件
+
+* 已支持和测试版本 HassOS 4.13 (HassOS Release-4 build 13 (Stable))
+  * 注意: 版本HassOS 4.14 存在蓝牙缺陷，蓝牙设备无法连接.
+  * 其它版本有待大家提交测试报告
+* 需要在带有蓝牙适配器的设备上运行，已经在树莓派 (Raspberry PI 3 Model B) 上测试成功
+  * 其它硬件有待大家提交测试报告
 
 ## 支持的设备
 
@@ -17,6 +28,13 @@
 | 小米 米家蓝牙温湿度计2  |  | LYWSD03MMC  |
 
 ## 功能
+
+### 米家蓝牙温湿度计 (LYWSDCGQ/01ZM)
+
+- Attributes
+  - `temperature`
+  - `humidity`
+  - `battery`
 
 ### 米家蓝牙温湿度计2 (LYWSD03MMC)
 
