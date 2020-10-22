@@ -1,0 +1,39 @@
+{
+    "config": {
+        "title": "Mijia BLE Temperature Hygrometer 2",
+        "step": {
+            "user": {
+                "title": "Mijia BLE Hygrometer",
+                "description": "If you need help with the configuration have a look here: https://github.com/leonxi/mitemp_bt2",
+                "data": {
+                    "mac": "Device MAC (e.g. \"http://yourgrocyurl.com\")",
+                    "mode": "Device mode no.",
+                    "name": "Device name",
+                    "period": "Scan period of this device"
+                }
+            }
+        },
+        "error": {
+            "auth": "Something went wrong."
+        },
+        "abort": {
+            "single_instance_allowed": "Only a single configuration of Grocy is allowed."
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "data": {
+                    "binary_sensor": "Binary sensor enabled",
+                    "sensor": "Sensor enabled",
+                    "switch": "Switch enabled",
+                    "allow_chores": "Chores enabled",
+                    "allow_meal_plan": "Meal plan enabled",
+                    "allow_shopping_list": "Shopping list enabled",
+                    "allow_stock": "Stock enabled",
+                    "allow_tasks": "Tasks enabled"
+                }
+            }
+        }
+    }
+}
