@@ -29,6 +29,8 @@ from homeassistant.helpers.event import track_point_in_utc_time
 import homeassistant.util.dt as dt_util
 
 from .const import (
+    DOMAIN,
+    DEFAULT_NAME,
     DEFAULT_MODE,
     DEFAULT_PERIOD,
     DEFAULT_USE_MEDIAN,
@@ -39,8 +41,6 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-DEFAULT_NAME = 'Mijia BLE Temperature Hygrometer 2'
 
 ATTRIBUTION_1 = "米家蓝牙温湿度计"
 ATTRIBUTION = "米家蓝牙温湿度计 2"
@@ -143,10 +143,12 @@ class SingletonBLEScanner(object):
 
             future = asyncio.Future()
 
+            val=b'\x01\x00'
+            p.writeCharacteristic(0x0038,val,True) # enable notifications of Temperature, Humidity and Battery voltage
+
             if mode == DEFAULT_MODE:
-                val=b'\x01\x00'
-                p.writeCharacteristic(0x0038,val,True) # enable notifications of Temperature, Humidity and Battery voltage
                 p.writeCharacteristic(0x0046,b'\xf4\x01\x00',True)
+
             p.withDelegate(MyDelegate(mac, future))
 
             cnt = 0

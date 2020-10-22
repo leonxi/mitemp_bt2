@@ -1,5 +1,8 @@
 """Constants for the Xiaomi Mijia Bluetooth Termometer."""
 
+DOMAIN = "mitemp_bt2"
+DEFAULT_NAME = 'Mijia BLE Temperature Hygrometer 2'
+
 # Configuration options
 CONF_PERIOD = "period"
 CONF_USE_MEDIAN = "use_median"
