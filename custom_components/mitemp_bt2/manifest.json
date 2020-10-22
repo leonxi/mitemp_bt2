@@ -1,9 +1,10 @@
 {
   "domain": "mitemp_bt2",
   "name": "Mijia BLE Temperature Hygrometer 2",
+  "config_flow": true,
   "documentation": "https://github.com/leonxi/mitemp_bt2",
   "issue_tracker": "https://github.com/leonxi/mitemp_bt2/issues",
   "dependencies": [],
-  "codeowners": ["leonxi"],
+  "codeowners": ["@leonxi"],
   "requirements": ["bluepy>=1.1.0"]
 }
