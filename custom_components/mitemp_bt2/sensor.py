@@ -141,8 +141,8 @@ class SingletonBLEScanner(object):
             while not success and retries < 3:
                 retries += 1
 
-                if reties > 1:
-                    self._event_loop.sleep(5)
+                if retries > 1:
+                    asyncio.sleep(5)
                     _LOGGER.error("Waiting ...")
 
                 try:
