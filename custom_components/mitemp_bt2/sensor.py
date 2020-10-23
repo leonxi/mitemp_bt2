@@ -135,10 +135,25 @@ class SingletonBLEScanner(object):
             self._event_loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self._event_loop)
 
-            try:
-                p = btle.Peripheral(mac, iface=interface)
-            except btle.BTLEDisconnectError as e:
-                _LOGGER.error(traceback.format_exc())
+            retries = 0
+            success = False
+
+            while not success and retries < 3:
+                retries += 1
+
+                if reties > 1:
+                    self._event_loop.sleep(5)
+                    _LOGGER.error("Waiting ...")
+
+                try:
+                    p = btle.Peripheral(mac, iface=interface)
+                except btle.BTLEDisconnectError as e:
+                    _LOGGER.error("%s Connection lost, Retrying ... %d" % (mac, retries))
+                    _LOGGER.debug(traceback.format_exc())
+                else:
+                    success = True
+
+            if not success:
                 return
 
             future = asyncio.Future()
