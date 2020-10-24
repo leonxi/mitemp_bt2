@@ -5,6 +5,7 @@ from collections import OrderedDict
 import voluptuous as vol
 from homeassistant import config_entries
 # from homeassistant.core import callback
+import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_HUMIDITY,
@@ -16,7 +17,8 @@ from homeassistant.const import (
     ATTR_ATTRIBUTION,
     ATTR_FRIENDLY_NAME,
     PERCENTAGE,
-    TEMP_CELSIUS)
+    TEMP_CELSIUS
+)
 
 from .const import (
     DOMAIN,
@@ -26,7 +28,8 @@ from .const import (
     DEFAULT_PERIOD,
     DEFAULT_USE_MEDIAN,
     DEFAULT_ACTIVE_SCAN,
-    CONF_PERIOD
+    CONF_PERIOD,
+    SENSOR_TYPES
 )
 
 _LOGGER = logging.getLogger(__name__)
