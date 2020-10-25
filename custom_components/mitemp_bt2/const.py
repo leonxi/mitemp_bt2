@@ -25,3 +25,6 @@ SENSOR_TYPES = {
     'humidity': ['湿度', PERCENTAGE],
     'battery': ['电量', PERCENTAGE],
 }
+
+UPDATE_TOPIC = DOMAIN + ".sensor.{}"
+ERROR_TOPIC = DOMAIN + ".sensor.{}_error"

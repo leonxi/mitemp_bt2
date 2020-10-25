@@ -10,6 +10,7 @@ import time
 import traceback
 from datetime import timedelta
 
+from homeassistant.core import callback
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
@@ -38,7 +39,9 @@ from .const import (
     CONF_PERIOD,
     CONF_USE_MEDIAN,
     CONF_ACTIVE_SCAN,
-    SENSOR_TYPES
+    SENSOR_TYPES,
+    UPDATE_TOPIC,
+    ERROR_TOPIC
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -367,3 +370,42 @@ class MiTemperatureSensor(Entity):
     def force_update(self):
         """Force update."""
         return True
+
+    async def async_added_to_hass(self):
+        """Register callbacks."""
+        self.async_on_remove(
+            self.hass.helpers.dispatcher.async_dispatcher_connect(
+                UPDATE_TOPIC.format(self._mac.replace(":", "").lower()), self.success
+            )
+        )
+
+        self.async_on_remove(
+            self.hass.helpers.dispatcher.async_dispatcher_connect(
+                ERROR_TOPIC.format(self._mac.replace(":", "").lower()), self.error
+            )
+        )
+
+    @callback
+    def success(self, data):
+        """Update state, trigger updates."""
+        if self.parameter == DEVICE_CLASS_TEMPERATURE:
+            current = data.temperature
+        elif self.parameter == DEVICE_CLASS_HUMIDITY:
+            current = data.humidity
+        else:
+            current = data.battery
+
+        if self._state != current:
+            _LOGGER.debug(f"{self.parameter} data changed")
+            self._state = current
+        self.async_write_ha_state()
+
+    @callback
+    def error(self):
+        """Update state, trigger updates."""
+        _LOGGER.error(
+            "Connection to mychevy website failed. "
+            "This probably means the mychevy to OnStar link is down"
+        )
+        self._state = None
+        self.async_write_ha_state()
