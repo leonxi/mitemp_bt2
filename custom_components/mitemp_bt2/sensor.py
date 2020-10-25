@@ -404,8 +404,8 @@ class MiTemperatureSensor(Entity):
     def error(self):
         """Update state, trigger updates."""
         _LOGGER.error(
-            "Connection to mychevy website failed. "
-            "This probably means the mychevy to OnStar link is down"
+            "Connection to mitemp_2 device failed. "
+            "This probably means the devices is not ready now"
         )
         self._state = None
         self.async_write_ha_state()
