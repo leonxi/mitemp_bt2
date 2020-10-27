@@ -185,7 +185,11 @@ class SingletonBLEScanner(object):
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up Mijia Hygrometer Sensors."""
-    _LOGGER.debug(config_entry.data)
+    _LOGGER.debug("async_setup_entry %s", config_entry.data)
+
+    if not config_entry.data:
+        return False
+
     devs = []
 
     mac = config_entry.data[CONF_MAC]

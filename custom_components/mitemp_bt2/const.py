@@ -6,11 +6,13 @@ from homeassistant.const import (
 
 DOMAIN = "mitemp_bt2"
 DEFAULT_NAME = 'Mijia BLE Temperature Hygrometer 2'
+ATTR_CONFIG = "config"
 
 # Configuration options
 CONF_PERIOD = "period"
 CONF_USE_MEDIAN = "use_median"
 CONF_ACTIVE_SCAN = "active_scan"
+CONF_DISCOVERY = "discovery"
 
 # Default values for configuration options
 DEFAULT_PERIOD = 300

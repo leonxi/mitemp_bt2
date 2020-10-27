@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.helpers import config_entry_flow
 # from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
@@ -20,6 +21,7 @@ from homeassistant.const import (
     TEMP_CELSIUS
 )
 
+from .common import async_get_discoverable_devices
 from .const import (
     DOMAIN,
     MODES,
@@ -94,3 +96,7 @@ class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 #             step_id="user",
 #             data_schema=vol.Schema(data_schema)
 #         )
+
+config_entry_flow.register_discovery_flow(
+    DOMAIN, "NEW_NAME", async_get_discoverable_devices, config_entries.CONN_CLASS_LOCAL_POLL
+)

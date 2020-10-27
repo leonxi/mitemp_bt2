@@ -3,6 +3,8 @@ import logging
 import threading
 import time
 from datetime import timedelta
+
+from homeassistant import config_entries
 from homeassistant.helpers import device_registry as dr
 from homeassistant.util import Throttle
 from homeassistant.const import (
@@ -12,8 +14,14 @@ from homeassistant.const import (
 
 from .const import (
     DOMAIN,
+    ATTR_CONFIG,
+    CONF_DISCOVERY,
     UPDATE_TOPIC,
     ERROR_TOPIC
+)
+from .common import (
+    get_static_devices,
+    async_discover_devices
 )
 from .sensor import SingletonBLEScanner
 
@@ -24,29 +32,64 @@ ERROR_SLEEP_TIME = timedelta(minutes=5)
 
 async def async_setup(hass, config):
     """Do not allow config via configuration.yaml"""
-    # hass.data[DOMAIN] = {}
+    conf = config.get("sensor")
+    _LOGGER.debug("async_setup %s", conf)
+
+    hass.data[DOMAIN] = {}
+    hass.data[DOMAIN][ATTR_CONFIG] = conf
+
+    if conf is not None:
+        hass.async_create_task(
+            hass.config_entries.flow.async_init(
+                DOMAIN, context={"source": config_entries.SOURCE_IMPORT}
+            )
+        )
 
     return True
 
 async def async_setup_entry(hass, entry):
     """Set up a config entry."""
-    _LOGGER.debug(entry)
-    hass.async_create_task(
-      hass.config_entries.async_forward_entry_setup(
-        entry, "sensor"
-      )
-    )
+    _LOGGER.debug("async_setup_entry %s", entry.data)
+    config_data = hass.data[DOMAIN].get(ATTR_CONFIG)
+    _LOGGER.debug("async_setup_entry %s", config_data)
 
-    device_registry = await dr.async_get_registry(hass)
-    device_registry.async_get_or_create(
-        config_entry_id=entry.entry_id,
-        identifiers={(DOMAIN, entry.entry_id)},
-        manufacturer="Xiaomi Mijia",
-        name="Hygrometer",
-    )
+    sensors = hass.data[DOMAIN]["sensor"] = []
 
-    hass.data[DOMAIN] = MiTempBT2Hub(SingletonBLEScanner(), hass, entry.data)
-    hass.data[DOMAIN].start()
+    # Add static devices
+    static_devices = []
+    if config_data is not None:
+        static_devices = get_static_devices(config_data)
+
+        sensors.extend(static_devices)
+
+    # Add discovered devices
+    if config_data is None or True: # config_data[CONF_DISCOVERY]
+        discovered_devices = await async_discover_devices(hass, static_devices)
+
+        sensors.extend(discovered_devices)
+
+    if sensors:
+        _LOGGER.debug(
+            "Got %s sensors: %s", len(sensors), ", ".join([d.mac for d in sensors])
+        )
+        hass.async_create_task(
+          hass.config_entries.async_forward_entry_setup(
+            entry, "sensor"
+          )
+        )
+
+        device_registry = await dr.async_get_registry(hass)
+
+        for device in sensors:
+            device_registry.async_get_or_create(
+                config_entry_id=entry.entry_id,
+                identifiers={(DOMAIN, device.id)},
+                manufacturer="Xiaomi Mijia",
+                name="Hygrometer",
+            )
+
+    # hass.data[DOMAIN] = MiTempBT2Hub(SingletonBLEScanner(), hass, entry.data)
+    # hass.data[DOMAIN].start()
 
     return True
 
