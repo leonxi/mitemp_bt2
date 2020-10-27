@@ -27,7 +27,7 @@ from .sensor import SingletonBLEScanner
 
 _LOGGER = logging.getLogger(__name__)
 
-MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=5)
+MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=15)
 ERROR_SLEEP_TIME = timedelta(minutes=5)
 
 async def async_setup(hass, config):
