@@ -6,6 +6,8 @@ English | [简体中文](./README_zh-CN.md)
 
 This is a custom component for home assistant to use bluetooth adapter directly integrate the Xiaomi Mijia BLE Temperature Hygrometer (LYWSDCGQ/01ZM) and Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
 
+Auto discovery supported without any configuration from v0.2.0-dev release.
+
 No Bluetooth Gateway required.
 
 | LYWSD03MMC | LYWSDCGQ/01ZM |
@@ -48,7 +50,9 @@ No Bluetooth Gateway required.
 You can install this custom component by adding this repository ([https://github.com/leonxi/mitemp_bt2](https://github.com/leonxi/mitemp_bt2/)) to [HACS](https://hacs.xyz/) in the settings menu of HACS first. You will find the custom component in the integration menu afterwards, look for 'Xiaomi Mijia BLE Temperature Hygrometer 2 Integration'. Alternatively, you can install it manually by copying the custom_component folder to your Home Assistant configuration folder.
 
 
-## Setup
+## Setup (_Optional_)
+
+From v0.2.0-dev releases, it will auto discovery without any configuration.
 
 ```yaml
 # configuration.yaml

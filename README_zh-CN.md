@@ -6,6 +6,8 @@
 
 这是一个Home Assistant自定义组件，用于 Home Assistant 通过 蓝牙适配器 直接集成 小米 米家蓝牙温湿度计 (LYWSDCGQ/01ZM) 和 米家蓝牙温湿度计2 (LYWSD03MMC)。
 
+v0.2.0-dev版本以后，已经支持自动发现功能，不需要任何配置。
+
 不需要蓝牙网关。
 
 | LYWSD03MMC | LYWSDCGQ/01ZM |
@@ -47,7 +49,9 @@
 
 你可以先在HACS设置菜单中，把这个库 ([https://github.com/leonxi/mitemp_bt2](https://github.com/leonxi/mitemp_bt2/)) 添加到 [HACS](https://hacs.xyz/) . 你将在集成菜单中找到定制组件，然后查找关键字 'Xiaomi Mijia BLE Temperature Hygrometer 2 Integration' 进行添加. 或者, 也可以通过将该自定义组件的 custom_component 文件夹，复制到 Home Assistant 的 config 文件夹.
 
-## 设置
+## 设置 (_可选_)
+
+v0.2.0-dev版本以后, 支持免配置自动发现，安装后即可自动找到符合条件的设备。
 
 ```yaml
 # configuration.yaml
