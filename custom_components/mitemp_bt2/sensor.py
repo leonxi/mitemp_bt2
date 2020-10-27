@@ -185,61 +185,37 @@ class SingletonBLEScanner(object):
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up Mijia Hygrometer Sensors."""
-    _LOGGER.debug(config_entry.data)
+    _LOGGER.debug("async_setup_entry %s", config_entry.data)
+    sensors = hass.data[DOMAIN]["sensor"]
+
+    if not config_entry.data and not sensors:
+        return False
+
     devs = []
 
-    mac = config_entry.data[CONF_MAC]
-    mode = config_entry.data[CONF_MODE]
+    for sensor in sensors:
+        mac = sensor.mac
+        mode = sensor.mode
 
-    instance = SingletonBLEScanner()
-    # hass.bus.listen("homeassistant_stop", instance.shutdown_handler)
+        instance = SingletonBLEScanner()
+        # hass.bus.listen("homeassistant_stop", instance.shutdown_handler)
 
-    monitors = ["temperature", "humidity", "battery"]
+        monitors = ["temperature", "humidity", "battery"]
 
-    for parameter in monitors:
-        name = SENSOR_TYPES[parameter][0]
-        unit = SENSOR_TYPES[parameter][1]
+        for parameter in monitors:
+            name = SENSOR_TYPES[parameter][0]
+            unit = SENSOR_TYPES[parameter][1]
 
-        prefix = config_entry.data.get(CONF_NAME)
-        if prefix:
-            name = "{} {}".format(prefix, name)
+            prefix = sensor.name
+            if prefix:
+                name = "{} {}".format(prefix, name)
 
-        devs.append(MiTemperatureSensor(mac, mode, parameter, name, unit))
+            devs.append(MiTemperatureSensor(mac, mode, parameter, name, unit))
 
     async_add_entities(devs)
 
-    def discover_ble_device(config):
-
-        data = instance.get_info(config[CONF_MAC], mode=config[CONF_MODE])
-
-        if data:
-            for dev in devs:
-                device_class = dev.device_class
-
-                if device_class == DEVICE_CLASS_TEMPERATURE:
-                    setattr(dev, "_state", data.temperature)
-                elif device_class == DEVICE_CLASS_HUMIDITY:
-                    setattr(dev, "_state", data.humidity)
-                else:
-                    setattr(dev, "_state", data.battery)
-
-                dev.schedule_update_ha_state()
-
-                _LOGGER.debug("important %s %s state updated.", config[CONF_MAC], device_class)
-
-    def update_ble(now):
-        period = config_entry.data[CONF_PERIOD]
-
-        try:
-            discover_ble_device(config_entry.data)
-        except RuntimeError as error:
-            _LOGGER.error("Error during Bluetooth LE scan: %s", error)
-
-        track_point_in_utc_time(
-            hass, update_ble, dt_util.utcnow() + timedelta(seconds=period)
-        )
-
-    # update_ble(dt_util.utcnow())
+    if hass.data[DOMAIN]["hub"]:
+        hass.data[DOMAIN]["hub"].start()
 
     # Return successful setup
     return True
