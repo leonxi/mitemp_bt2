@@ -98,5 +98,5 @@ class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 #         )
 
 config_entry_flow.register_discovery_flow(
-    DOMAIN, "NEW_NAME", async_get_discoverable_devices, config_entries.CONN_CLASS_LOCAL_POLL
+    DOMAIN, "米家温湿度计", async_get_discoverable_devices, config_entries.CONN_CLASS_LOCAL_POLL
 )

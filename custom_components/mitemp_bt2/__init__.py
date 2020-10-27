@@ -35,7 +35,9 @@ async def async_setup(hass, config):
     conf = config.get("sensor")
     _LOGGER.debug("async_setup %s", conf)
 
-    hass.data[DOMAIN] = {}
+    if not hasattr(hass.data, DOMAIN):
+        hass.data[DOMAIN] = {}
+
     hass.data[DOMAIN][ATTR_CONFIG] = conf
 
     if conf is not None:
@@ -60,7 +62,7 @@ async def async_setup_entry(hass, entry):
     if config_data is not None:
         static_devices = get_static_devices(config_data)
 
-        sensors.extend(static_devices)
+        # sensors.extend(static_devices)
 
     # Add discovered devices
     if config_data is None or True: # config_data[CONF_DISCOVERY]
@@ -84,12 +86,13 @@ async def async_setup_entry(hass, entry):
             device_registry.async_get_or_create(
                 config_entry_id=entry.entry_id,
                 identifiers={(DOMAIN, device.id)},
-                manufacturer="Xiaomi Mijia",
-                name="Hygrometer",
+                model=device.mode,
+                manufacturer="小米 米家",
+                name=device.friendly_name,
             )
 
-    # hass.data[DOMAIN] = MiTempBT2Hub(SingletonBLEScanner(), hass, entry.data)
-    # hass.data[DOMAIN].start()
+    if len(sensors) > 0:
+        hass.data[DOMAIN]["hub"] = MiTempBT2Hub(SingletonBLEScanner(), hass, sensors)
 
     return True
 
@@ -100,32 +103,33 @@ async def async_unload_entry(hass, config_entry):
 class MiTempBT2Hub(threading.Thread):
     """蓝牙设备数据扫描"""
 
-    def __init__(self, instance, hass, hass_config):
+    def __init__(self, instance, hass, sensors):
         """Init MiTempBT2 Hub"""
         super().__init__()
         self.instance = instance
         self.hass = hass
-        self.hass_config = hass_config
+        self.sensors = sensors
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES)
     def update(self):
         """Update sensors from Bluetooth devices."""
-        data = self.instance.get_info(self.hass_config[CONF_MAC], mode=self.hass_config[CONF_MODE])
-
-        if data:
-            self.hass.helpers.dispatcher.dispatcher_send(UPDATE_TOPIC.format(self.hass_config[CONF_MAC].replace(":", "").lower()), data)
-
-    def run(self):
-        """Thread run loop."""
-        while True:
+        for sensor in self.sensors:
             try:
-                _LOGGER.debug("Starting mitemp_bt2 loop")
-                self.update()
-                time.sleep(MIN_TIME_BETWEEN_UPDATES.seconds)
+                data = self.instance.get_info(sensor.mac, mode=sensor.mode)
+
+                if data:
+                    self.hass.helpers.dispatcher.dispatcher_send(UPDATE_TOPIC.format(sensor.id), data)
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception(
                     "Error updating mitemp_bt2 data. "
                     "This probably means the devices is not ready now"
                 )
-                self.hass.helpers.dispatcher.dispatcher_send(ERROR_TOPIC.format(self.hass_config[CONF_MAC].replace(":", "").lower()))
+                self.hass.helpers.dispatcher.dispatcher_send(ERROR_TOPIC.format(sensor.id))
                 time.sleep(ERROR_SLEEP_TIME.seconds)
+
+    def run(self):
+        """Thread run loop."""
+        while True:
+            _LOGGER.debug("Starting mitemp_bt2 loop")
+            self.update()
+            time.sleep(MIN_TIME_BETWEEN_UPDATES.seconds)

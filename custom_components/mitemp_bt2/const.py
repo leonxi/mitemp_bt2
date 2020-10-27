@@ -21,6 +21,7 @@ DEFAULT_ACTIVE_SCAN = False
 DEFAULT_MODE = "LYWSD03MMC" # "LYWSD03MMC", "LYWSDCGQ/01ZM" are available
 
 MODES = ["LYWSD03MMC", "LYWSDCGQ/01ZM"]
+NAMES = ["米家蓝牙温湿度计2", "米家蓝牙温湿度计"]
 
 SENSOR_TYPES = {
     'temperature': ['温度', TEMP_CELSIUS],

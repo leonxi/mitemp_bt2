@@ -1,6 +1,6 @@
 """mitemp_bt2 common functions."""
 import logging
-from bluepy.btle import Scanner, DefaultDelegate
+from bluepy.btle import Scanner, DefaultDelegate, BTLEDisconnectError
 import asyncio
 
 from homeassistant.const import (
@@ -11,16 +11,18 @@ from homeassistant.const import (
 from .const import (
     CONF_PERIOD,
     DEFAULT_PERIOD,
-    MODES
+    MODES,
+    NAMES
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 class MiTemperatureDevice():
-    def __init__(self, mac, mode, period):
+    def __init__(self, mac, mode, period, static = False):
         self._mac = mac.lower()
         self._mode = mode
         self._period = period
+        self._static = static
 
     @property
     def id(self):
@@ -38,6 +40,20 @@ class MiTemperatureDevice():
     def period(self):
         return self._period
 
+    @property
+    def name(self):
+        return f"sensor.{self.id}"
+
+    @property
+    def friendly_name(self):
+        if self.mode == MODES[0]:
+            return NAMES[0]
+        else:
+            return NAMES[1]
+
+    def is_static(self):
+        return _static
+
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
@@ -53,14 +69,24 @@ async def _async_has_devices(hass) -> bool:
     # TODO Check if there are any devices that can be discovered in the network.
     def discover():
         scanner = Scanner().withDelegate(ScanDelegate())
-        devices = scanner.scan(10.0)
+        scanentries = None
 
-        for dev in devices:
+        cnt = 0
+        while scanentries is None and cnt < 3:
+            cnt += 1
+
+            try:
+                scanentries = scanner.scan(10.0)
+            except BTLEDisconnectError as e:
+                _LOGGER.debug("Bluetooth device scanner exception.")
+                asyncio.sleep(5)
+
+        for dev in scanentries:
             _LOGGER.debug("Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi)
             for (adtype, desc, value) in dev.getScanData():
                 _LOGGER.debug("  %s = %s", desc, value)
 
-        return devices
+        return scanentries
 
     devices = await hass.async_add_executor_job(discover)
     return len(devices) > 0
@@ -133,6 +159,6 @@ def get_static_devices(config_data):
         mode = entry.get(CONF_MODE)
         period = entry.get(CONF_PERIOD)
 
-        sensors.append(MiTemperatureDevice(mac, mode, period))
+        sensors.append(MiTemperatureDevice(mac, mode, period, True))
 
     return sensors
