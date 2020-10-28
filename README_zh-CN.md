@@ -75,5 +75,14 @@ sensor:
 
   ![LYWSD03MMC_PANEL_SHOW](/pictures/sample_panel_1.png)
 
+## 待处理事项
+
+- 集成选项
+  - 增加自动发现选项，控制自动发现(启用/禁用)
+  - 增加周期选项，控制读取蓝牙设备数据周期(默认15分钟)，避免频繁访问蓝牙设备，造成蓝牙设备耗电高
+- 已知问题
+  - 安装集成的时候，无法每次都显示扫描到的设备，并设置所在区域
+  - 设备区域无法设置和修改
+
 [releases-shield]: https://img.shields.io/github/release/leonxi/mitemp_bt2.svg
 [releases]: https://github.com/leonxi/mitemp_bt2/releases
