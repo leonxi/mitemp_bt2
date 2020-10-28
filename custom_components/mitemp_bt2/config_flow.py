@@ -25,6 +25,8 @@ from .common import async_get_discoverable_devices
 from .const import (
     DOMAIN,
     MODES,
+    CONF_DISCOVERY,
+    DEFAULT_DISCOVERY,
     DEFAULT_NAME,
     DEFAULT_MODE,
     DEFAULT_PERIOD,
@@ -88,6 +90,9 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             return self.async_create_entry(title="米家蓝牙温湿度计集成选项", data=user_input)
 
         data_schema = OrderedDict()
+        data_schema[
+            vol.Required(CONF_DISCOVERY, default=self.config_entry.options.get(CONF_DISCOVERY))
+        ] = bool
         data_schema[
             vol.Required(CONF_PERIOD, default=self.config_entry.options.get(CONF_PERIOD))
         ] = str
