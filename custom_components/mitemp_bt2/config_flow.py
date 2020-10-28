@@ -77,25 +77,25 @@ class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user", data_schema=vol.Schema(data_schema), errors=self._errors,
         )
 
-# class ModeOptionsFlowHandler(config_entries.OptionsFlow):
-#     def __init__(self, config_entry):
-#         """Initialize UniFi options flow."""
-#         self.config_entry = config_entry
-#
-#     async def async_step_user(self, user_input=None):
-#         """Manage the options."""
-#         if user_input is not None:
-#             return self.async_create_entry(title="", data=user_input)
-#
-#         data_schema = OrderedDict()
-#         data_schema[
-#             vol.Required(CONF_MODE, default=self.config_entry.options.get(CONF_MODE))
-#         ] = str
-#
-#         return self.async_show_form(
-#             step_id="user",
-#             data_schema=vol.Schema(data_schema)
-#         )
+class OptionsFlowHandler(config_entries.OptionsFlow):
+    def __init__(self, config_entry):
+        """Initialize UniFi options flow."""
+        self.config_entry = config_entry
+
+    async def async_step_user(self, user_input=None):
+        """Manage the options."""
+        if user_input is not None:
+            return self.async_create_entry(title="米家蓝牙温湿度计集成选项", data=user_input)
+
+        data_schema = OrderedDict()
+        data_schema[
+            vol.Required(CONF_PERIOD, default=self.config_entry.options.get(CONF_PERIOD))
+        ] = str
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(data_schema)
+        )
 
 config_entry_flow.register_discovery_flow(
     DOMAIN, "米家温湿度计", async_get_discoverable_devices, config_entries.CONN_CLASS_LOCAL_POLL
