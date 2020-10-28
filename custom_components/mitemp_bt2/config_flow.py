@@ -5,7 +5,7 @@ from collections import OrderedDict
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import config_entry_flow
-# from homeassistant.core import callback
+from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
     DEVICE_CLASS_TEMPERATURE,
@@ -79,10 +79,20 @@ class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user", data_schema=vol.Schema(data_schema), errors=self._errors,
         )
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry):
+        """Options callback for MiTempBT2."""
+        return OptionsFlowHandler(config_entry)
+
 class OptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry):
         """Initialize UniFi options flow."""
         self.config_entry = config_entry
+
+    async def async_step_init(self, user_input=None):
+        """Manage the options."""
+        return await self.async_step_user()
 
     async def async_step_user(self, user_input=None):
         """Manage the options."""
