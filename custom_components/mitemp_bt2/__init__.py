@@ -33,7 +33,9 @@ ERROR_SLEEP_TIME = timedelta(minutes=5)
 async def async_setup(hass, config):
     """Do not allow config via configuration.yaml"""
     conf = config.get("sensor")
-    _LOGGER.debug("async_setup %s", conf)
+    _LOGGER.debug("async_setup sensor %s", conf)
+    conf2 = config.get(DOMAIN)
+    _LOGGER.debug("async_setup %s %s", DOMAIN, conf2)
 
     if not hasattr(hass.data, DOMAIN):
         hass.data[DOMAIN] = {}
