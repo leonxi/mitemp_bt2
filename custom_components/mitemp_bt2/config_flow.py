@@ -5,7 +5,6 @@ from collections import OrderedDict
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import config_entry_flow
-from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
     DEVICE_CLASS_TEMPERATURE,
@@ -38,7 +37,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class ConfigFlowHanlder(config_entries.ConfigFlow, domain=DOMAIN):
     """config flow for mitemp_bt2."""
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
@@ -46,11 +45,6 @@ class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def __init__(self):
         """Initialize."""
         self._errors = {}
-
-    # @staticmethod
-    # @callback
-    # def async_get_options_flow(config_entry):
-    #     return ModeOptionsFlowHandler()
 
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
@@ -62,56 +56,23 @@ class MitempBT2ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            return self.async_create_entry(title="米家温湿度计", data=user_input)
 
         return await self._show_config_form(user_input)
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit the data."""
         data_schema = OrderedDict()
-        data_schema[vol.Required(CONF_MAC, default="")] = str
-        data_schema[vol.Optional(CONF_MODE, default=DEFAULT_MODE)] = vol.In(MODES)
-        data_schema[vol.Optional(CONF_NAME, default=DEFAULT_NAME)] = str
-        data_schema[vol.Optional(CONF_PERIOD, default=DEFAULT_PERIOD)] = int
+
+        data_schema[vol.Required(CONF_DISCOVERY, default=DEFAULT_DISCOVERY)] = bool
+        data_schema[vol.Required(CONF_PERIOD, default=DEFAULT_PERIOD)] = str
+
         _LOGGER.debug("config form")
 
         return self.async_show_form(
             step_id="user", data_schema=vol.Schema(data_schema), errors=self._errors,
         )
 
-    @staticmethod
-    @callback
-    def async_get_options_flow(config_entry):
-        """Options callback for MiTempBT2."""
-        return OptionsFlowHandler(config_entry)
-
-class OptionsFlowHandler(config_entries.OptionsFlow):
-    def __init__(self, config_entry):
-        """Initialize UniFi options flow."""
-        self.config_entry = config_entry
-
-    async def async_step_init(self, user_input=None):
-        """Manage the options."""
-        return await self.async_step_user()
-
-    async def async_step_user(self, user_input=None):
-        """Manage the options."""
-        if user_input is not None:
-            return self.async_create_entry(title="米家蓝牙温湿度计集成选项", data=user_input)
-
-        data_schema = OrderedDict()
-        data_schema[
-            vol.Required(CONF_DISCOVERY, default=self.config_entry.options.get(CONF_DISCOVERY))
-        ] = bool
-        data_schema[
-            vol.Required(CONF_PERIOD, default=self.config_entry.options.get(CONF_PERIOD))
-        ] = str
-
-        return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema(data_schema)
-        )
-
-config_entry_flow.register_discovery_flow(
-    DOMAIN, "米家温湿度计", async_get_discoverable_devices, config_entries.CONN_CLASS_LOCAL_POLL
-)
+# config_entry_flow.register_discovery_flow(
+#     DOMAIN, "米家温湿度计", async_get_discoverable_devices, config_entries.CONN_CLASS_LOCAL_POLL
+# )

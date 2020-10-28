@@ -283,6 +283,7 @@ class MiTemperatureSensor(Entity):
         self._mac = mac
         self._mode = mode
         self.parameter = parameter
+        self._device_id = mac.replace(":", "").lower()
         self._unique_id = "{}_{}".format(parameter, mac.replace(":", "").lower())
         self.entity_id = "{}.{}".format("sensor", self._unique_id)
         self._unit = unit
@@ -311,13 +312,11 @@ class MiTemperatureSensor(Entity):
     #     return {
     #         "identifiers": {
     #             # Serial numbers are unique identifiers within a specific domain
-    #             (DOMAIN, self._unique_id)
+    #             (DOMAIN, self._device_id)
     #         },
     #         "name": self._name,
-    #         "manufacturer": self.light.manufacturername,
-    #         "model": self.light.productname,
-    #         "sw_version": self.light.swversion,
-    #         "via_device": (hue.DOMAIN, self.api.bridgeid),
+    #         "manufacturer": "小米 米家",
+    #         "model": self._mode,
     #     }
 
     @property

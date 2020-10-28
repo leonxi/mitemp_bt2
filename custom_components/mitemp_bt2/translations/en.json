@@ -2,15 +2,16 @@
   "config": {
     "step": {
       "user": {
-        "title": "New Mijia Hygrometer Sensor",
-        "description": "If you need help with the configuration have a look here: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
+        "title": "Mijia Hygrometer Integration",
+        "description": "This integration support auto discovery devices for Xiaomi Mijia BLE Temperature Hygrometer 2, If you want more detail information for this integration, please visit our project site: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
         "data": {
-          "mac": "Device MAC (e.g. \"A4:C1:38:AA:AA:AA\")",
-          "mode": "Device mode no.",
-          "name": "Device name",
-          "period": "Scan period of this device"
+          "period": "Scan period of this device",
+          "discovery": "Auto discovery"
         }
       }
+    },
+    "abort": {
+      "single_instance_allowed": "This integration only allow single instance."
     }
   }
 }
