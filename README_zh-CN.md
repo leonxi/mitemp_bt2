@@ -3,6 +3,7 @@
 # 小米 米家蓝牙温湿度计2
 
 [![GitHub Release][releases-shield]][releases]
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 
 这是一个Home Assistant自定义组件，用于 Home Assistant 通过 蓝牙适配器 直接集成 小米 米家蓝牙温湿度计 (LYWSDCGQ/01ZM) 和 米家蓝牙温湿度计2 (LYWSD03MMC)。
 

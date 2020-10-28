@@ -3,6 +3,7 @@ English | [简体中文](./README_zh-CN.md)
 # Xiaomi Mijia BLE Temperature Hygrometer 2
 
 [![GitHub Release][releases-shield]][releases]
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 
 This is a custom component for home assistant to use bluetooth adapter directly integrate the Xiaomi Mijia BLE Temperature Hygrometer (LYWSDCGQ/01ZM) and Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
 
