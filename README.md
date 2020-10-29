@@ -84,11 +84,11 @@ Configuration variables:
 ## Todo
 
 - Integration Options
-  - (Supported) Add auto discovery option, to control enable or disable discovery
-  - (Supported) Add period option, to control period of fetching devices' data, default period is 15 minutes. Avoid frequent access to Bluetooth devices, resulting in high power consumption of them.
+  - (_*Supported*_) Add auto discovery option, to control enable or disable discovery
+  - (_*Supported*_) Add period option, to control period of fetching devices' data, default period is 15 minutes. Avoid frequent access to Bluetooth devices, resulting in high power consumption of them.
 - Known issues
-  - (Fixed) When installation, discoverred devices can not be displayed, and set their own areas.
-  - (Fixed) In devices list, area or name can not be modified.
+  - (_*Fixed*_) When installation, discoverred devices can not be displayed, and set their own areas.
+  - (_*Fixed*_) In devices list, area or name can not be modified.
 
 [releases-shield]: https://img.shields.io/github/release/leonxi/mitemp_bt2.svg
 [releases]: https://github.com/leonxi/mitemp_bt2/releases
