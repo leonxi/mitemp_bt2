@@ -52,7 +52,7 @@ class MiTemperatureDevice():
             return NAMES[1]
 
     def is_static(self):
-        return _static
+        return self._static
 
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
