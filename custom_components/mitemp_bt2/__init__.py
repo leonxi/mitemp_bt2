@@ -16,6 +16,7 @@ from .const import (
     DOMAIN,
     ATTR_CONFIG,
     CONF_DISCOVERY,
+    CONF_PERIOD,
     UPDATE_TOPIC,
     ERROR_TOPIC
 )
@@ -53,9 +54,17 @@ async def async_setup(hass, config):
 
 async def async_setup_entry(hass, entry):
     """Set up a config entry."""
-    _LOGGER.debug("async_setup_entry %s", entry.data)
+    ui_config_data = entry.data
+    _LOGGER.debug("async_setup_entry ui config %s", ui_config_data)
+    ui_config_options = entry.options
+    _LOGGER.debug("async_setup_entry ui config options %s", ui_config_options)
+
+    # Set options values to operation
+    discovery = ui_config_options.get("CONF_DISCOVERY") or ui_config_data.get("CONF_DISCOVERY")
+    period = ui_config_options.get("CONF_PERIOD") or ui_config_data.get("CONF_PERIOD")
+
     config_data = hass.data[DOMAIN].get(ATTR_CONFIG)
-    _LOGGER.debug("async_setup_entry %s", config_data)
+    _LOGGER.debug("async_setup_entry yaml config %s", config_data)
 
     sensors = hass.data[DOMAIN]["sensor"] = []
 
@@ -67,7 +76,7 @@ async def async_setup_entry(hass, entry):
         # sensors.extend(static_devices)
 
     # Add discovered devices
-    if config_data is None or True: # config_data[CONF_DISCOVERY]
+    if config_data is None or discovery: # config_data[CONF_DISCOVERY]
         discovered_devices = await async_discover_devices(hass, static_devices)
 
         sensors.extend(discovered_devices)
@@ -94,7 +103,11 @@ async def async_setup_entry(hass, entry):
             )
 
     if len(sensors) > 0:
-        hass.data[DOMAIN]["hub"] = MiTempBT2Hub(SingletonBLEScanner(), hass, sensors)
+
+        if period:
+            period = timedelta(seconds=period)
+
+        hass.data[DOMAIN]["hub"] = MiTempBT2Hub(SingletonBLEScanner(), hass, sensors, period)
 
     return True
 
@@ -105,14 +118,14 @@ async def async_unload_entry(hass, config_entry):
 class MiTempBT2Hub(threading.Thread):
     """蓝牙设备数据扫描"""
 
-    def __init__(self, instance, hass, sensors):
+    def __init__(self, instance, hass, sensors, period = MIN_TIME_BETWEEN_UPDATES):
         """Init MiTempBT2 Hub"""
         super().__init__()
         self.instance = instance
         self.hass = hass
         self.sensors = sensors
+        self.period = period or MIN_TIME_BETWEEN_UPDATES
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
     def update(self):
         """Update sensors from Bluetooth devices."""
         for sensor in self.sensors:
@@ -134,4 +147,4 @@ class MiTempBT2Hub(threading.Thread):
         while True:
             _LOGGER.debug("Starting mitemp_bt2 loop")
             self.update()
-            time.sleep(MIN_TIME_BETWEEN_UPDATES.seconds)
+            time.sleep(self.period.seconds)

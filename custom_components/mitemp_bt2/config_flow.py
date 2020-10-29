@@ -5,6 +5,7 @@ from collections import OrderedDict
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import config_entry_flow
+from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
     DEVICE_CLASS_TEMPERATURE,
@@ -65,12 +66,54 @@ class ConfigFlowHanlder(config_entries.ConfigFlow, domain=DOMAIN):
         data_schema = OrderedDict()
 
         data_schema[vol.Required(CONF_DISCOVERY, default=DEFAULT_DISCOVERY)] = bool
-        data_schema[vol.Required(CONF_PERIOD, default=DEFAULT_PERIOD)] = str
+        data_schema[vol.Required(CONF_PERIOD, default=DEFAULT_PERIOD)] = int
 
         _LOGGER.debug("config form")
 
         return self.async_show_form(
             step_id="user", data_schema=vol.Schema(data_schema), errors=self._errors,
+        )
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry):
+        """Options callback for MiTempBT2."""
+        return OptionsFlowHandler(config_entry)
+
+class OptionsFlowHandler(config_entries.OptionsFlow):
+    def __init__(self, config_entry):
+        """Initialize UniFi options flow."""
+        self.config_entry = config_entry
+
+    async def async_step_init(self, _user_input=None):
+        """Manage the options."""
+        return await self.async_step_user()
+
+    async def async_step_user(self, user_input=None):
+        """Manage the options."""
+        if user_input is not None:
+            return self.async_create_entry(title="选项", data=user_input)
+
+        discovery = self.config_entry.options.get(CONF_DISCOVERY)
+        period = self.config_entry.options.get(CONF_PERIOD)
+
+        if discovery is None:
+            discovery = self.config_entry.data.get(CONF_DISCOVERY)
+
+        if period is None:
+            period = self.config_entry.data.get(CONF_PERIOD)
+
+        data_schema = OrderedDict()
+        data_schema[
+            vol.Required(CONF_DISCOVERY, default=discovery)
+        ] = bool
+        data_schema[
+            vol.Required(CONF_PERIOD, default=period)
+        ] = int
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(data_schema)
         )
 
 # config_entry_flow.register_discovery_flow(

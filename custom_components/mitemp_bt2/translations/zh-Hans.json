@@ -13,5 +13,17 @@
     "abort": {
       "single_instance_allowed": "该集成仅支持一个实例."
     }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "米家温湿度计集成",
+        "description": "该集成支持自动发现设备 小米米家蓝牙温湿度计2等，更详细的内容请访问项目网站: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
+        "data": {
+          "period": "周期",
+          "discovery": "自动发现"
+        }
+      }
+    }
   }
 }

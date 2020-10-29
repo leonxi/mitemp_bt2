@@ -13,5 +13,17 @@
     "abort": {
       "single_instance_allowed": "This integration only allow single instance."
     }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Mijia Hygrometer Integration",
+        "description": "This integration support auto discovery devices for Xiaomi Mijia BLE Temperature Hygrometer 2, If you want more detail information for this integration, please visit our project site: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
+        "data": {
+          "period": "Scan period of this device",
+          "discovery": "Auto discovery"
+        }
+      }
+    }
   }
 }

@@ -15,7 +15,7 @@ CONF_ACTIVE_SCAN = "active_scan"
 CONF_DISCOVERY = "discovery"
 
 # Default values for configuration options
-DEFAULT_PERIOD = 300
+DEFAULT_PERIOD = 1800
 DEFAULT_USE_MEDIAN = False
 DEFAULT_ACTIVE_SCAN = False
 DEFAULT_MODE = "LYWSD03MMC" # "LYWSD03MMC", "LYWSDCGQ/01ZM" are available
