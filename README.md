@@ -3,6 +3,7 @@ English | [简体中文](./README_zh-CN.md)
 # Xiaomi Mijia BLE Temperature Hygrometer 2
 
 [![GitHub Release][releases-shield]][releases]
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 
 This is a custom component for home assistant to use bluetooth adapter directly integrate the Xiaomi Mijia BLE Temperature Hygrometer (LYWSDCGQ/01ZM) and Mijia BLE Temperature Hygrometer 2 (LYWSD03MMC).
 
@@ -79,6 +80,15 @@ Configuration variables:
 ## Panel Sample
 
   ![LYWSD03MMC_PANEL_SHOW](/pictures/sample_panel_1.png)
+
+## Todo
+
+- Integration Options
+  - Add auto discovery option, to control enable or disable discovery
+  - Add period option, to control period of fetching devices' data, default period is 15 minutes. Avoid frequent access to Bluetooth devices, resulting in high power consumption of them.
+- Known issues
+  - When installation, discoverred devices can not be displayed, and set their own areas.
+  - In devices list, area or name can not be modified. (Fixed)
 
 [releases-shield]: https://img.shields.io/github/release/leonxi/mitemp_bt2.svg
 [releases]: https://github.com/leonxi/mitemp_bt2/releases

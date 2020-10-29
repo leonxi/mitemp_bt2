@@ -2,13 +2,26 @@
   "config": {
     "step": {
       "user": {
-        "title": "添加 米家蓝牙温湿度计",
-        "description": "如果填写过程需要帮助，请访问这里: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
+        "title": "米家温湿度计集成",
+        "description": "该集成支持自动发现设备 小米米家蓝牙温湿度计2等，更详细的内容请访问项目网站: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
         "data": {
-          "mac": "MAC地址 (例如: \"A4:C1:38:AA:AA:AA\")",
-          "mode": "型号",
-          "name": "名称",
-          "period": "周期"
+          "period": "周期",
+          "discovery": "自动发现"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "该集成仅支持一个实例."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "米家温湿度计集成",
+        "description": "该集成支持自动发现设备 小米米家蓝牙温湿度计2等，更详细的内容请访问项目网站: https:\/\/github.com\/leonxi\/mitemp_bt2\/",
+        "data": {
+          "period": "周期",
+          "discovery": "自动发现"
         }
       }
     }
