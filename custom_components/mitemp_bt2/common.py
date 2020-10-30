@@ -1,24 +1,17 @@
 """mitemp_bt2 common functions."""
-import logging
-from bluepy.btle import Scanner, DefaultDelegate, BTLEDisconnectError
 import asyncio
+import logging
 
-from homeassistant.const import (
-    CONF_MAC,
-    CONF_MODE
-)
+from bluepy.btle import BTLEDisconnectError, DefaultDelegate, Scanner
+from homeassistant.const import CONF_MAC, CONF_MODE
 
-from .const import (
-    CONF_PERIOD,
-    DEFAULT_PERIOD,
-    MODES,
-    NAMES
-)
+from .const import CONF_PERIOD, DEFAULT_PERIOD, MODES, NAMES
 
 _LOGGER = logging.getLogger(__name__)
 
-class MiTemperatureDevice():
-    def __init__(self, mac, mode, period, static = False):
+
+class MiTemperatureDevice:
+    def __init__(self, mac, mode, period, static=False):
         self._mac = mac.lower()
         self._mode = mode
         self._period = period
@@ -52,7 +45,8 @@ class MiTemperatureDevice():
             return NAMES[1]
 
     def is_static(self):
-        return _static
+        return self._static
+
 
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
@@ -63,6 +57,7 @@ class ScanDelegate(DefaultDelegate):
             _LOGGER.debug("Discovered device", dev.addr)
         elif isNewData:
             _LOGGER.debug("Received new data from", dev.addr)
+
 
 async def _async_has_devices(hass) -> bool:
     """Return if there are devices that can be discovered."""
@@ -82,7 +77,9 @@ async def _async_has_devices(hass) -> bool:
                 asyncio.sleep(5)
 
         for dev in scanentries:
-            _LOGGER.debug("Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi)
+            _LOGGER.debug(
+                "Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi
+            )
             for (adtype, desc, value) in dev.getScanData():
                 _LOGGER.debug("  %s = %s", desc, value)
 
@@ -91,8 +88,8 @@ async def _async_has_devices(hass) -> bool:
     devices = await hass.async_add_executor_job(discover)
     return len(devices) > 0
 
-async def async_get_discoverable_devices(hass):
 
+async def async_get_discoverable_devices(hass):
     def discover():
         scanner = Scanner().withDelegate(ScanDelegate())
         scanentries = None
@@ -110,7 +107,9 @@ async def async_get_discoverable_devices(hass):
         devices = []
 
         for dev in scanentries:
-            _LOGGER.debug("Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi)
+            _LOGGER.debug(
+                "Device %s (%s), RSSI=%d dB", dev.addr, dev.addrType, dev.rssi
+            )
             mac = dev.addr
             mode = None
 
@@ -127,6 +126,7 @@ async def async_get_discoverable_devices(hass):
         return devices
 
     return await hass.async_add_executor_job(discover)
+
 
 async def async_discover_devices(hass, existing_devices):
     """Get devices through discovery."""
@@ -148,6 +148,7 @@ async def async_discover_devices(hass, existing_devices):
     await hass.async_add_executor_job(process_devices)
 
     return sensors
+
 
 def get_static_devices(config_data):
     """Get statically defined devices in the config."""

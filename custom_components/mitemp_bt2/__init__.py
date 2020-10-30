@@ -5,24 +5,18 @@ import time
 from datetime import timedelta
 
 from homeassistant import config_entries
+from homeassistant.const import CONF_MAC, CONF_MODE
 from homeassistant.helpers import device_registry as dr
 from homeassistant.util import Throttle
-from homeassistant.const import (
-    CONF_MAC,
-    CONF_MODE
-)
 
+from .common import async_discover_devices, get_static_devices
 from .const import (
-    DOMAIN,
     ATTR_CONFIG,
     CONF_DISCOVERY,
     CONF_PERIOD,
+    DOMAIN,
+    ERROR_TOPIC,
     UPDATE_TOPIC,
-    ERROR_TOPIC
-)
-from .common import (
-    get_static_devices,
-    async_discover_devices
 )
 from .sensor import SingletonBLEScanner
 
@@ -30,6 +24,7 @@ _LOGGER = logging.getLogger(__name__)
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=15)
 ERROR_SLEEP_TIME = timedelta(minutes=5)
+
 
 async def async_setup(hass, config):
     """Do not allow config via configuration.yaml"""
@@ -52,6 +47,7 @@ async def async_setup(hass, config):
 
     return True
 
+
 async def async_setup_entry(hass, entry):
     """Set up a config entry."""
     ui_config_data = entry.data
@@ -60,7 +56,9 @@ async def async_setup_entry(hass, entry):
     _LOGGER.debug("async_setup_entry ui config options %s", ui_config_options)
 
     # Set options values to operation
-    discovery = ui_config_options.get("CONF_DISCOVERY") or ui_config_data.get("CONF_DISCOVERY")
+    discovery = ui_config_options.get("CONF_DISCOVERY") or ui_config_data.get(
+        "CONF_DISCOVERY"
+    )
     period = ui_config_options.get("CONF_PERIOD") or ui_config_data.get("CONF_PERIOD")
 
     config_data = hass.data[DOMAIN].get(ATTR_CONFIG)
@@ -76,7 +74,7 @@ async def async_setup_entry(hass, entry):
         # sensors.extend(static_devices)
 
     # Add discovered devices
-    if config_data is None or discovery: # config_data[CONF_DISCOVERY]
+    if config_data is None or discovery:  # config_data[CONF_DISCOVERY]
         discovered_devices = await async_discover_devices(hass, static_devices)
 
         sensors.extend(discovered_devices)
@@ -86,9 +84,7 @@ async def async_setup_entry(hass, entry):
             "Got %s sensors: %s", len(sensors), ", ".join([d.mac for d in sensors])
         )
         hass.async_create_task(
-          hass.config_entries.async_forward_entry_setup(
-            entry, "sensor"
-          )
+            hass.config_entries.async_forward_entry_setup(entry, "sensor")
         )
 
         device_registry = await dr.async_get_registry(hass)
@@ -107,18 +103,22 @@ async def async_setup_entry(hass, entry):
         if period:
             period = timedelta(seconds=period)
 
-        hass.data[DOMAIN]["hub"] = MiTempBT2Hub(SingletonBLEScanner(), hass, sensors, period)
+        hass.data[DOMAIN]["hub"] = MiTempBT2Hub(
+            SingletonBLEScanner(), hass, sensors, period
+        )
 
     return True
+
 
 async def async_unload_entry(hass, config_entry):
     """Unload flood monitoring sensors."""
     return await hass.config_entries.async_forward_entry_unload(config_entry, "sensor")
 
+
 class MiTempBT2Hub(threading.Thread):
     """蓝牙设备数据扫描"""
 
-    def __init__(self, instance, hass, sensors, period = MIN_TIME_BETWEEN_UPDATES):
+    def __init__(self, instance, hass, sensors, period=MIN_TIME_BETWEEN_UPDATES):
         """Init MiTempBT2 Hub"""
         super().__init__()
         self.instance = instance
@@ -133,13 +133,17 @@ class MiTempBT2Hub(threading.Thread):
                 data = self.instance.get_info(sensor.mac, mode=sensor.mode)
 
                 if data:
-                    self.hass.helpers.dispatcher.dispatcher_send(UPDATE_TOPIC.format(sensor.id), data)
+                    self.hass.helpers.dispatcher.dispatcher_send(
+                        UPDATE_TOPIC.format(sensor.id), data
+                    )
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception(
                     "Error updating mitemp_bt2 data. "
                     "This probably means the devices is not ready now"
                 )
-                self.hass.helpers.dispatcher.dispatcher_send(ERROR_TOPIC.format(sensor.id))
+                self.hass.helpers.dispatcher.dispatcher_send(
+                    ERROR_TOPIC.format(sensor.id)
+                )
                 time.sleep(ERROR_SLEEP_TIME.seconds)
 
     def run(self):
