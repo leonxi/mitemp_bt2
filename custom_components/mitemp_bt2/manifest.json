@@ -6,5 +6,6 @@
   "issue_tracker": "https://github.com/leonxi/mitemp_bt2/issues",
   "dependencies": [],
   "codeowners": ["@leonxi"],
-  "requirements": ["bluepy>=1.1.0"]
+  "requirements": ["bluepy>=1.1.0"],
+  "version": "1.0"
 }
